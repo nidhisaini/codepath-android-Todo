@@ -24,6 +24,7 @@ Time spent: 3 hours spent in total
 -  Suggested: Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
 ### Walkthrough of all user stories:
+codepath-android-Todo/ToDoDemo.gif
 
 
 
