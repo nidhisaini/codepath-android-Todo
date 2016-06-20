@@ -14,7 +14,7 @@ Time spent: 3 hours spent in total
 -  Required: User can edit items from the list
 
 
-### Extensions:
+### Extensions(not included in current version):
 
 -  Suggested: Persist the todo items using SQLite
 -  Suggested: Improve style of the todo items in the list using a custom adapter
