@@ -23,5 +23,5 @@ Time spent: 3 hours spent in total
 -  Suggested: Add support for selecting the priority of each todo item (and display in listview item)
 -  Suggested: Tweak the style improving the UI / UX, play with colors, images or backgrounds
 
-
- ### Walkthrough of all user stories:
+### Walkthrough of all user stories:
+![]({{site.baseurl}}//ToDoDemo.gif)
