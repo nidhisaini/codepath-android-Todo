@@ -8,7 +8,7 @@ Time spent: 3 hours spent in total
 
 ### Completed user stories:
 
-- Required: User can view a list of saved items
+-  Required: User can view a list of saved items
 -  Required: User can add items to the list
 -  Required: User can remove items from the list
 -  Required: User can edit items from the list
@@ -16,7 +16,7 @@ Time spent: 3 hours spent in total
 
 ### Extensions:
 
--  Suggested: Persist the todo items using SQLite and SugarORM
+-  Suggested: Persist the todo items using SQLite
 -  Suggested: Improve style of the todo items in the list using a custom adapter
 -  Suggested: Add support for completion due dates for todo items (and display within listview item)
 -  Suggested: Use a DialogFragment instead of new Activity for editing items
