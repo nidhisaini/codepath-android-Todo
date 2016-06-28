@@ -13,9 +13,9 @@ This is the Simple ToDo app for adding, editing, and deleting items from a list 
 -  Required: User can edit items from the list
 -  Required: Persist the todo items using SQLite
 -  Required: Improve style of the todo items in the list using a custom adapter
--  Required: Add support for completion due dates for todo items (and display within listview item)
--  Required: Add support for selecting the priority of each todo item (and display in listview item)
--  Required: Tweak the style improving the UI / UX, play with colors, images or backgrounds
+-  Required: Added support for completion due dates for todo items (and display within listview item)
+-  Required: Added support for selecting the priority of each todo item (and display in listview item)
+-  Required: Tweaked the style using colors, images, and backgrounds
 
 ### Extensions(not included in current version):
 -  Suggested: Use a DialogFragment instead of new Activity for editing items
