@@ -1,25 +1,34 @@
 package com.tutorial.nidhi.todoapp;
 
+import android.app.AlertDialog;
+import android.app.LoaderManager;
+import android.content.ContentValues;
+import android.content.CursorLoader;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.Loader;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
-public class MainActivity2 extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
+
     private static final String TAG = "MainActivity";
+    private static final int ADD_REQUEST_CODE = 500;
     private final int REQUEST_CODE = 20;
     ArrayList<String> todoItems;
     ArrayAdapter<String> aToDoAdapter;
@@ -28,6 +37,9 @@ public class MainActivity2 extends AppCompatActivity {
     private int requestCode;
     private int resultCode;
     private Intent data;
+    private TodoItemsDbHelper handler;
+
+    private CursorAdapter cursorAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,88 +48,122 @@ public class MainActivity2 extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        populateArrayItems();
 
-        lvItems =(ListView) findViewById(R.id.lvitems);
-        lvItems.setAdapter(aToDoAdapter);
-        etEditText =(EditText) findViewById(R.id.etEditText);
+        cursorAdapter = new TodoCursorAdapter(this, null, 0);
 
-        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                todoItems.remove(position);
-                aToDoAdapter.notifyDataSetChanged();
-                writeItems();
-                return true;
-            }
-        });
+        lvItems = (ListView) findViewById(R.id.lvitems);
+        lvItems.setAdapter(cursorAdapter);
 
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String text = todoItems.get(position);
-                int pos = position;
-                Log.i(TAG, String.valueOf(pos));
-                /*launch EditItemActivity activities and pass data*/
                 Intent intent = new Intent(MainActivity2.this, EditItemActivity.class);
-                intent.putExtra("pos", pos);
-                intent.putExtra("text", text);
-                startActivityForResult(intent, REQUEST_CODE);
+                Uri uri = Uri.parse(TodoProvider.CONTENT_URI + "/" + id);
+                intent.putExtra(TodoProvider.CONTENT_ITEM_TYPE, uri);
+                startActivityForResult(intent, ADD_REQUEST_CODE);
             }
         });
 
-    }
-
-    /*populateArrayItems*/
-    private void populateArrayItems() {
-        readItems();
-        aToDoAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, todoItems);
-    }
+        getLoaderManager().initLoader(0, null, this);
 
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == REQUEST_CODE) {
-            // Extract name value from result extras
-            String editedText = data.getExtras().getString("editedText");
-            int editedPos = data.getExtras().getInt("editedPos", 60);
-            //
-            todoItems.remove(editedPos);
-            todoItems.add(editedPos, editedText);
-            aToDoAdapter.notifyDataSetChanged();
-            writeItems();
-            // Toast the name to display temporarily on screen
-            Toast.makeText(this, editedText, Toast.LENGTH_SHORT).show();
-        }
     }
+
+    private void insertTodo(String todo, String todoDes, String todoPriority, String todoDueDate) {
+        ContentValues values = new ContentValues();
+        values.put(TodoItemsDbHelper.TODO_NAME,todo);
+        values.put(TodoItemsDbHelper.TODO_DESCRIPTION, todoDes);
+        values.put(TodoItemsDbHelper.TODO_PRIORITY, todoPriority);
+        values.put(TodoItemsDbHelper.TODO_DUEDATE, todoDueDate);
+        Uri todoUri = getContentResolver().insert(TodoProvider.CONTENT_URI, values);
+
+       // Log.d("MainActivity", "Inserted todo" + todoUri.getPathSegments());
+    }
+
+
+
 
     public void onAddItem(View view) {
-        etEditText = (EditText) findViewById(R.id.etEditText);
-        String itemText = etEditText.getText().toString();
-        aToDoAdapter.add(itemText);
-        etEditText.setText("");
-        writeItems();
+        Intent intent = new Intent(this, EditItemActivity.class);
+        startActivityForResult(intent, ADD_REQUEST_CODE);
     }
 
-    /*read from txt file -internal storage*/
-    private void readItems() {
-        File filesDir = getFilesDir();
-        File file = new File(filesDir, "todo.txt");
-        try {
-            todoItems = new ArrayList<String>(FileUtils.readLines(file));
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(this, TodoProvider.CONTENT_URI, null, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        cursorAdapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        cursorAdapter.swapCursor(null);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.action_delete_all:
+                deleteAllNotes();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+
+    }
+
+
+
+    private void restartLoader() {
+        getLoaderManager().restartLoader(0, null, this);
+    }
+
+    private void deleteAllNotes() {
+
+        DialogInterface.OnClickListener dialogClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int button) {
+                        if (button == DialogInterface.BUTTON_POSITIVE) {
+                            //Insert Data management code here
+                            getContentResolver().delete(TodoProvider.CONTENT_URI, null, null);
+                            restartLoader();
+                            Toast.makeText(MainActivity2.this,
+                                    getString(R.string.all_deleted),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(getString(R.string.are_you_sure))
+                .setPositiveButton(getString(android.R.string.yes), dialogClickListener)
+                .setNegativeButton(getString(android.R.string.no), dialogClickListener)
+                .show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == ADD_REQUEST_CODE && resultCode == RESULT_OK){
+            restartLoader();
         }
     }
-
-    /*write to txt file- internal storage*/
-    private void writeItems() {
-        File filesDir = getFilesDir();
-        File file = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(file, todoItems);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 }

@@ -7,23 +7,29 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
         <activity
             android:name=".EditItemActivity"
             android:label="@string/title_activity_edit_item"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity2">
         </activity>
         <activity
             android:name=".MainActivity2"
-            android:icon="@drawable/ic_note_black_18dp"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/title_activity_main2"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter android:label="@string/title_activity_main" >
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:authorities="com.tutorial.nidhi.todoapp.todoprovider"
+            android:name=".TodoProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

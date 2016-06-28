@@ -25,30 +25,108 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_edit_item"
         tools:context="com.tutorial.nidhi.todoapp.EditItemActivity"
-        android:background="@color/backcolor">
+        android:background="@color/backcolor"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/todoname"
+            android:id="@+id/tvTodoName"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etEditName"
+            android:layout_below="@+id/tvTodoName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="Name"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:id="@+id/tvDesc"
+            android:layout_below="@+id/etEditName"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:inputType="textMultiLine"
+            android:textSize="16dp"
+            android:id="@+id/etEditDesc"
+            android:layout_below="@+id/tvDesc"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="Description..."
+            android:layout_alignRight="@+id/tvDesc"
+            android:layout_alignEnd="@+id/tvDesc"
+            android:gravity="top"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/tvPrio"
+            android:id="@+id/tvPrio"
+            android:layout_below="@+id/etEditDesc"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="16dp"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/etEditPriority"
+            android:layout_below="@+id/tvPrio"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:hint="Priority"
+            android:textSize="16dp"/>
+
+        <TextView
+            android:layout_width="160dp"
+            android:layout_height="wrap_content"
+            android:text="@string/tvDueDate"
+            android:id="@+id/tvDueDate"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:textSize="16dp"
+            android:layout_below="@+id/etEditPriority"
+            android:layout_alignRight="@+id/etDueDate"
+            android:layout_alignEnd="@+id/etDueDate" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
+            android:inputType="date"
             android:ems="10"
-            android:id="@+id/etEditItem"
-            android:layout_alignParentTop="true"
+            android:id="@+id/etDueDate"
+            android:layout_below="@+id/tvDueDate"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_marginTop="56dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true" />
+            android:text="@string/etDueDate"
+            android:textSize="16dp"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/save"
-            android:id="@+id/btnSave"
-            android:layout_below="@+id/etEditItem"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_marginTop="43dp" />
+        <ImageButton
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:id="@+id/imgBtnDatePicker"
+            android:layout_below="@+id/etEditPriority"
+            android:layout_toRightOf="@+id/tvDueDate"
+            android:layout_toEndOf="@+id/tvDueDate"
+            android:background="@mipmap/ic_calendar_grey600_36dp"
+            />
+
+
     </RelativeLayout>
 
 
